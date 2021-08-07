@@ -51,8 +51,13 @@
 
 @media screen and (max-width: 400px) {
     footer {
-        a {
-            width: 60px;
+        .redes-sociales {
+            .container {
+                .email:hover { background: transparent; }
+                .twitter:hover { background: transparent; }
+                .linkedin:hover { background: transparent; }
+                .instagram:hover { background: transparent; }
+            }
         }
     }
 }

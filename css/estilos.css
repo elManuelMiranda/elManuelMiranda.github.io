@@ -409,8 +409,17 @@ footer .redes-sociales .container .instagram:hover {
 }
 
 @media screen and (max-width: 400px) {
-  footer a {
-    width: 60px;
+  footer .redes-sociales .container .email:hover {
+    background: transparent;
+  }
+  footer .redes-sociales .container .twitter:hover {
+    background: transparent;
+  }
+  footer .redes-sociales .container .linkedin:hover {
+    background: transparent;
+  }
+  footer .redes-sociales .container .instagram:hover {
+    background: transparent;
   }
 }
 /*# sourceMappingURL=estilos.css.map */
