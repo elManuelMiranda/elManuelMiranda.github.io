@@ -1,0 +1,104 @@
+@media screen and (max-width: 768px) {
+    header {
+        .contenedor {
+            position: static;
+            height: auto;
+            .menu {
+                text-align: center;
+                a {
+                    margin: 10px 20px;
+                }
+            }
+            .textos {
+                position: static;
+                margin: 100px 0;
+                .nombre {
+                    font-size: 30px;
+                }
+                h3 {
+                    font-size: 18px;
+                }
+            }
+        }
+    }
+    .main {
+        .acerca-de {
+            .contenedor {
+                .foto {
+                    position: relative;
+                    width: 100%;
+                }
+                article {
+                    position: relative;
+                    width: 100%;
+                    top: -50px;
+                    transform: translate(0px, 0);
+                }
+            }
+        }
+        .menu {
+            padding-top: 300px;
+            article {
+                width: 100%;
+            }
+        }
+        .galeria {
+            .foto {
+                width: 50%;
+            }
+        }
+        .mapa {
+            width: 80%;
+            margin: auto;
+        }
+    }
+}
+
+@media screen and (max-width: 425px) {
+    .main {
+        .acerca-de {
+            .contenedor {
+                article {
+                    h3 {
+                        font-size: 34px;
+                        margin-bottom: 10px;
+                    }
+                }
+            }
+        }
+        .menu{
+            .contenedor {
+                .contenedor-menu {
+                    .contenedor-menu2 {
+                        article {
+                            .nombre,
+                            .precio {
+                                font-size: 16px;
+                                line-height: 16px;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .ubicacion {
+            .contenedor {
+                .direccion {
+                    margin-bottom: 20px;
+                }
+                .horarios {
+                    .entre-semana,
+                    .fin-semana{
+                        width: 100%;
+                        margin-bottom: 10px;
+                    }
+                }
+                .direccion,
+                .horarios {
+                    width: 100%;
+                    text-align: center;
+                }
+            }
+        }
+    }
+}

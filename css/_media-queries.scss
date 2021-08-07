@@ -1,0 +1,58 @@
+@media screen and (max-width: 768px) {
+    header {
+        .menu {
+            text-align: center;
+        }
+    }
+    .main {
+        .trabajos {
+            .container {
+                .contenedor-trabajos {
+                    align-content: center;
+                }
+            }
+        }
+    }
+}
+@media screen and (max-width: 425px) {
+    header {
+        .contenedor-texto {
+            .texto {
+                .nombre {
+                    font-size: 35px;
+                }
+                .profesion {
+                    padding: 10px 0;
+                }
+            }
+        }
+    }
+    .main {
+        .container {
+            .skills {
+                i {
+                    font-size: 50px;
+                }
+            }
+        }
+    }
+    footer {
+        .redes-sociales {
+            .container {
+                display: block;
+                a {
+                    justify-content: center;
+                    margin: 0;
+                }
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 400px) {
+    footer {
+        a {
+            width: 60px;
+        }
+    }
+}

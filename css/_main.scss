@@ -1,0 +1,162 @@
+.main {
+    .acerca-de {
+        text-align: center;
+        .container {
+            overflow: visible;
+            // .foto {
+            //     margin-top: -60px;
+            //     img {
+            //         vertical-align: top;
+            //         border-radius: 50%;
+            //         border: 5px solid rgba(221, 217, 217, 0.8);
+            //     }
+            // }
+            .texto {
+                color: #5a5a5a;
+                font-weight: 600;
+                font-size: 1em;
+                line-height: 30px;
+                width: 80%;
+                margin: 40px auto 60px auto;
+                .titulo {
+                    font-size: 34px;
+                    line-height: 34px;
+                    margin-bottom: 40px;
+                    font-weight: 300;
+                    color: #dd820d;
+                    text-align: center;
+                }
+                .bold {
+                    color: $blue-prim;
+                    text-decoration: underline;
+                }
+            }
+            .skills {
+                .titulo {
+                    font-size: 34px;
+                    line-height: 34px;
+                    margin: 50px 0 20px 0;
+                    font-weight: 300;
+                    color: #dd820d;
+                    text-align: center;
+                }
+                i {
+                    color: #FFD700;
+                    text-align: center;
+                    width: 100px;
+                    display: inline-block;
+                    padding: 15px 0;
+                    border-radius: 3px;
+                    font-size: 80px;
+                    margin: 0 20px;
+                    cursor: pointer;
+                }
+                .html { color: #e34f26; &:hover { color: #000;} }
+                .css { color: #146eb0; &:hover { color: #000;} }
+                .sass { color: #cf6b9e; &:hover { color: #000;} }
+                .js { color: #f7df1e; &:hover { color: #000;} }
+                .bootstrap { color: #5a3a7b; &:hover { color: #000;} }
+                .php { color: #8993be; &:hover { color: #000;} }
+                .wp { color: #444140; &:hover { color: #000;} }
+                .react { color: #61dbfb; &:hover { color: #000;} }
+                .films { color: #ce2a2a; &:hover { color: #000;} }
+                .music { color: #5d6bbb; &:hover { color: #000;} }
+                .vg { color: #0d7adf; &:hover { color: #000;} }
+            }
+        }
+    }
+    .trabajos {
+        background: #f2f2f2;
+        padding: 30px 0;
+        .container {
+            overflow: hidden;
+            .titulo {
+                font-size: 34px;
+                line-height: 34px;
+                margin-bottom: 40px;
+                font-weight: 300;
+                color: #323068;
+                text-align: center;
+            }
+            .contenedor-trabajos {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: space-between;
+                .trabajo {
+                    margin-bottom: 40px;
+                    .thumb {
+                        width: 100%;
+                        margin-bottom: 10px;
+                        position: relative;
+                        display: inline-block;
+                        img {
+                            width: 100%;
+                            vertical-align: top;
+                            border-radius: 5px;
+                            height: auto;
+                        }
+                        &:hover {
+                            img {
+                                filter: grayscale(100%) blur(2px);
+                                transition: filter .2s ease;
+                            }
+                        }
+                        // span {
+                        //     .btn {
+                        //         position: absolute;
+                        //         top: 50%;
+                        //         left: 50%;
+                        //         transform: translate(-50%, -50%);
+                        //         -ms-transform: translate(-50%, -50%);
+                        //         background-color: #555;
+                        //         color: white;
+                        //         font-size: 16px;
+                        //         padding: 12px 24px;
+                        //         border: none;
+                        //         cursor: pointer;
+                        //         border-radius: 5px;
+                        //         display: none;
+                        //     }
+                        // }
+                        .btn {
+                            position: absolute;
+                            top: 50%;
+                            left: 50%;
+                            transform: translate(-50%, -50%);
+                            -ms-transform: translate(-50%, -50%);
+                            background-color: #555;
+                            color: white;
+                            font-size: 16px;
+                            padding: 12px 24px;
+                            border: none;
+                            cursor: pointer;
+                            border-radius: 5px;
+                            display: none;
+                        }
+                        &:hover {
+                            .btn {
+                                display: block;
+                            }
+                        }
+                    }
+                    .descripcion {
+                        text-align: center;
+                        .nombre {
+                            font-weight: 700;
+                            color: $blue-prim;
+                            margin-bottom: 10px;
+                            a {
+                                text-decoration: none;
+                            }
+                        }
+                        .categoria {
+                            font-size: 14px;
+                            color: #636363;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
