@@ -179,6 +179,14 @@ header .contenedor-texto .texto h2 {
   color: #000;
 }
 
+.main .acerca-de .container .skills .git {
+  color: #f34f29;
+}
+
+.main .acerca-de .container .skills .git:hover {
+  color: #000;
+}
+
 .main .acerca-de .container .skills .php {
   color: #8993be;
 }
