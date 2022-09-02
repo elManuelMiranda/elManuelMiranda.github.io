@@ -40,7 +40,7 @@
         var pared = null;
 
         var gameMap = [
-            0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0,
             0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 1, 0,
             0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 0, 1, 0,
@@ -114,7 +114,7 @@
             wall.src = './img/Wall.png';
 
             bgMusic.src = './fx/Labyrinth.mp3';
-            gotEmerald.src = './fx/ChaosEmerald.mp3';
+            gotEmerald.src = './fx/PhantomRuby.mp3';
             stageClear.src = './fx/StageClear.mp3';
             drowning.src = './fx/Drowning.mp3';
             gameover.src = './fx/GameOver.mp3';
@@ -356,31 +356,27 @@
             bgMusic.loop(false);
         }
 
-        document.addEventListener('keydown', function (e) {
+        document.addEventListener('keyup', function (e) {
 
             //arriba
             if (e.which == 87) {
                 direction = 'up';
-                update();
             }
 
             //abajo
             if (e.which == 83) {
                 direction = 'down';
-                update();
             }
 
             //izquierda
             if (e.which == 65) {
                 direction = 'left';
-                update();
                 // spriteLeft();
             }
 
             //derecha
             if (e.which == 68) {
                 direction = 'right';
-                update();
                 // spriteRight();
             }
 
