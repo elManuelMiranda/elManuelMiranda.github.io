@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+        Into the Labyrinth
+    </title>
+    <style type="text/css">
+        body {
+            width: 100%;
+        }
+
+        canvas {
+            background-color: rgb(199, 181, 181);
+            margin: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="mycanvas" width="1000" height="800">
+        Tu navegador no soporta canvas
+    </canvas>
+    <div>
+        <h3>Has que Mario llegue hasta el Phantom Ruby y regresarlo a su dimension!<br>
+            Controles: UP: W,  DOWN: S,  LEFT: A,  RIGHT:D
+        </h3>
+    </div>
+
+    <!-- <img src="./img/sm.png" id="imagen"> -->
+
+    <script type="text/javascript">
+
+        var cv = null;
+        var ctx = null;
+        var player1 = null;
+        var player2 = null;
+        var pared = null;
+
+        var gameMap = [
+            0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0,
+            0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 1, 0,
+            0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 0, 1, 0,
+            0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 0, 0, 1, 1, 0,
+            0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0,
+            0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0,
+            0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0,
+            0, 1, 0, 0, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0,
+            0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0,
+            0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0,
+            0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0,
+            0, 0, 0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 0, 0, 0,
+            0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0,
+            0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0,
+            0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 0,
+            0, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 1, 0,
+            0, 1, 0, 0, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 0, 1, 0, 1, 0,
+            0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0,
+            0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0,
+            0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0,
+            0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0,
+            0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0,
+            0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        ]
+
+        var collBox = new Array();
+
+        var mapW = 30, mapH = 25;
+        var wallW = 30, wallH = 30;
+        var super_x = 30, super_y = 30;
+
+        var direction = 'right';
+        var score = 0;
+        var speed = 3;
+
+        var background = new Image();
+
+        const sonic_w = 32;
+        const sonic_h = 39;
+        var sonic = new Image();
+        var emerald = new Image();
+        var wall = new Image();
+
+        var bgMusic = new Audio();
+        var gotEmerald = new Audio();
+        var stageClear = new Audio();
+        var drowning = new Audio();
+        var gameover = new Audio();
+
+        var started = true;
+        var pause = false;
+        var cleared = false;
+        var isGameOver = false;
+
+        var time = new Date(60000);
+        var stop;
+
+        function start() {
+            cv = document.getElementById('mycanvas');
+            ctx = cv.getContext('2d');
+
+            player1 = new Cuadrado(super_x, super_y, 30, 30);
+
+            player2 = new Cuadrado(900, 694, 20, 20);
+
+            background.src = './img/Labyrinth.png'
+
+            sonic.src = './img/mario.png';
+            emerald.src = './img/PhantomRuby.png';
+            wall.src = './img/Wall.png';
+
+            bgMusic.src = './fx/Labyrinth.mp3';
+            gotEmerald.src = './fx/ChaosEmerald.mp3';
+            stageClear.src = './fx/StageClear.mp3';
+            drowning.src = './fx/Drowning.mp3';
+            gameover.src = './fx/GameOver.mp3';
+
+            paint();
+            timer();
+
+        }
+
+        function timer() {
+            //Decremento 500 milisegundos
+            var ms = time.getMilliseconds() - 500;
+            time.setMilliseconds(ms);
+
+            //Muestro la nueva fecha
+            var texto = rellenaCeros(time.getMinutes()) + ":" + rellenaCeros(time.getSeconds());
+            var spanTiempo = document.getElementById("tiempo");
+            spanTiempo.innerHTML = texto;
+
+            //Compruebo el valor para cambiar el color del texto
+            if (time.getSeconds() < 6) {
+                spanTiempo.style.color = "red";
+            }
+            else if (time.getSeconds() < 11) {
+                spanTiempo.style.color = "orange";
+            }
+            else {
+                spanTiempo.style.color = "#0F0";
+            }
+
+            //Compruebo si llega a 0 para finalizar el juego o continuar
+            if (time.getSeconds() <= 0) {
+                var mensaje = "¡Lo siento! Se ha terminado el tiempo.Pincha AQUÍ para volver a intentarlo.";
+                finalizar(mensaje);
+            }
+            else {
+                //Hago un loop para que se ejecute cada 500ms
+                stop = setTimeout(temporizador, 500);
+            }
+        }
+
+        function rellenaCeros(numero) {
+
+            if (numero < 10) {
+                return "0" + numero;
+            }
+            else {
+                return numero;
+            }
+
+        }
+
+        function paint() {
+
+            window.requestAnimationFrame(paint);
+
+            // background
+            const ptrn = ctx.createPattern(background, 'repeat');
+            ctx.fillStyle = ptrn;
+            ctx.fillRect(0, 0, cv.width, cv.height);
+
+            //player1.dibujar(ctx);
+            ctx.drawImage(
+                sonic,
+                // ---- Selection ----
+                0, // sx
+                sonic_h * 2, // sy
+                sonic_w, // sWidth
+                sonic_h, // sHeight
+                // ---- Drawing ----
+                player1.x, // dx
+                player1.y, // dy
+                sonic_w, // dWidth
+                sonic_h // dHeight
+            );
+
+            player2.dibujar(ctx);
+            ctx.drawImage(emerald, player2.x, player2.y);
+
+            //pared.dibujar(ctx);
+            // ctx.drawImage(wall, pared.x, pared.y, 50, 50);
+
+            for (var y = 0; y < mapH; y++) {
+                for (var x = 0; x < mapW; x++) {
+                    switch (gameMap[((y * mapW) + x)]) {
+                        case 0:
+                            ctx.beginPath();
+                            pared = new Cuadrado(x * wallW, y * wallH, wallW, wallH);
+                            collBox.push(pared);
+                            ctx.drawImage(wall, x * wallW, y * wallH, wallW, wallH);
+                            break;
+                        default:
+
+                    }
+                }
+            }
+
+            ctx.fillStyle = "#ff0000";
+            ctx.fillStyle = "black";
+            ctx.fillRect(80, 5, 100, 20);
+            ctx.fillStyle = "white";
+            ctx.font = "bold 16px Arial";
+            ctx.fillText('SCORE:' + score, 80, 20);
+
+            // if (started) {
+
+            //     ctx.fillStyle = "rgba(0,0,0,0.5)";
+            //     ctx.fillRect(0, 0, 1000, 800);
+
+            //     ctx.fillStyle = "white";
+            //     ctx.fillText('CLICK SPACE TO START', 450, 450);
+            // } else {
+            //     update();
+            // }
+
+            if (pause) {
+                bgMusic.pause();
+                drowning.pause();
+                gameover.pause();
+
+                ctx.fillStyle = "rgba(0,0,0,0.5)";
+                ctx.fillRect(0, 0, 1000, 800);
+
+                ctx.fillStyle = "white";
+                ctx.fillText('P A U S E', 450, 450);
+            } else {
+                update();
+            }
+
+            if (cleared) {
+                bgMusic.pause();
+                drowning.pause();
+                bgMusic.currentTime = 0;
+
+                ctx.fillStyle = "rgba(0,0,0,0.5)";
+                ctx.fillRect(0, 0, 1000, 800);
+
+                ctx.fillStyle = "white";
+                ctx.fillText('Y O U   A R E   T O O   C O O L !', 450, 450);
+            }
+        }
+
+        function update() {
+
+            if (isGameOver == false) {
+                if (direction == 'right') {
+                    player1.x += speed;
+                }
+
+                if (direction == 'left') {
+                    player1.x -= speed;
+                }
+
+                if (direction == 'down') {
+                    player1.y += speed;
+                }
+
+                if (direction == 'up') {
+                    player1.y -= speed;
+                }
+
+                if (player1.se_tocan(player2)) {
+
+                    allClear();
+                    score += 100;
+                }
+
+                for (var i = 0; i < collBox.length; i++) {
+                    if (player1.se_tocan(collBox[i])) {
+                        if (direction == 'right') {
+                            player1.x -= speed;
+                        }
+
+                        if (direction == 'left') {
+                            player1.x += speed;
+                        }
+
+                        if (direction == 'down') {
+                            player1.y -= speed;
+                        }
+
+                        if (direction == 'up') {
+                            player1.y += speed;
+                        }
+                    }
+                }
+
+                if (bgMusic.ended && isGameOver == false) {
+                    gameOver();
+                }
+
+                bgMusic.play();
+            }
+        }
+
+        function allClear() {
+            if (direction == 'right') {
+                player1.x -= 21;
+            }
+
+            if (direction == 'left') {
+                player1.x += 20;
+            }
+
+            if (direction == 'down') {
+                player1.y -= 20;
+            }
+
+            if (direction == 'up') {
+                player1.y += 20;
+            }
+            speed = 0;
+            cleared = (cleared) ? false : true;
+            stageClear.play();
+            gotEmerald.play();
+            clearTimeout(stop);
+        }
+
+        function gameOver() {
+            if (direction == 'right') {
+                player1.x = player1.x;
+            }
+
+            if (direction == 'left') {
+                player1.x = player1.x;
+            }
+
+            if (direction == 'down') {
+                player1.y = player1.y;
+            }
+
+            if (direction == 'up') {
+                player1.y = player1.y;
+            }
+            gameover.play();
+            gameover.loop(false);
+            gameover.pause();
+            bgMusic.pause();
+            bgMusic.loop(false);
+        }
+
+        document.addEventListener('keydown', function (e) {
+
+            //arriba
+            if (e.which == 87) {
+                direction = 'up';
+                update();
+            }
+
+            //abajo
+            if (e.which == 83) {
+                direction = 'down';
+                update();
+            }
+
+            //izquierda
+            if (e.which == 65) {
+                direction = 'left';
+                update();
+                // spriteLeft();
+            }
+
+            //derecha
+            if (e.which == 68) {
+                direction = 'right';
+                update();
+                // spriteRight();
+            }
+
+            //pause
+            if (e.which == 32) {
+
+                pause = (pause) ? false : true;
+            }
+
+            // //start
+            // if (e.which == 13) {
+
+            //     started = (started) ? false : true;
+            // }
+
+        })
+
+        window.addEventListener('load', start)
+
+        window.requestAnimationFrame = (function () {
+            return window.requestAnimationFrame ||
+                window.webkitRequestAnimationFrame ||
+                window.mozRequestAnimationFrame ||
+                function (callback) {
+                    window.setTimeout(callback, 17);
+                };
+        }());
+
+        function Cuadrado(x, y, w, h, c) {
+            this.x = x;
+            this.y = y;
+            this.w = w;
+            this.h = h;
+            this.c = c;
+
+            this.se_tocan = function (target) {
+
+                if (this.x < target.x + target.w &&
+                    this.x + this.w > target.x &&
+                    this.y < target.y + target.h &&
+                    this.y + this.h > target.y) {
+                    return true;
+                }
+            };
+
+            this.dibujar = function (ctx) {
+
+                ctx.fillStyle = this.c;
+                ctx.fillRect(this.x, this.y, this.w, this.h);
+                ctx.strokeRect(this.x, this.y, this.w, this.h);
+            }
+        }
+
+        function random_rgba() {
+            var o = Math.round, r = Math.random, s = 255;
+            return 'rgba(' + o(r() * s) + ',' + o(r() * s) + ',' + o(r() * s) + ',' + r().toFixed(1) + ')';
+        }
+
+        function generateRandomInteger(max) {
+            return Math.floor(Math.random() * max) + 1;
+        }
+
+        // function spriteRight() {
+        //     ctx.drawImage(
+        //         // Image
+        //         sonic,
+        //         // Selection
+        //         // -- Add MARIO_WIDTH to sx on each consecutive tick.
+        //         // -- %8 to wrap the values around to keep repeating 0 to 8.
+        //         // -- 8 Because in the sprite we have 8 mario poses in one row.
+        //         (sonic_w * (Math.floor(currentFrame) % 8)),
+        //         sonic_h * 2, // sy
+        //         sonic_w, // sWidth
+        //         sonic_h, // sHeight
+        //         // Drawing
+        //         player1.x, // dx
+        //         player1.y, // dy
+        //         sonic_w, // dWidth
+        //         sonic_h // dHeight
+        //     );
+        //     currentFrame++;
+        //     requestAnimationFrame(spriteRight);
+        // }
+
+        // function spriteLeft() {
+        //     ctx.drawImage(
+        //         // Image
+        //         sonic,
+        //         // Selection
+        //         // -- Add MARIO_WIDTH to sx on each consecutive tick.
+        //         // -- %8 to wrap the values around to keep repeating 0 to 8.
+        //         // -- 8 Because in the sprite we have 8 mario poses in one row.
+        //         (sonic_w * (Math.floor(currentFrame) % 8)),
+        //         sonic_h * 1, // sy
+        //         sonic_w, // sWidth
+        //         sonic_h, // sHeight
+        //         // Drawing
+        //         player1.x, // dx
+        //         player1.y, // dy
+        //         sonic_w, // dWidth
+        //         sonic_h // dHeight
+        //     );
+        //     currentFrame++;
+        //     requestAnimationFrame(spriteLeft);
+        // }
+
+        // function sprite() {
+        //     ctx.clearRect(player1.x, player1.y, player1.width, player1.height);
+        //     ctx.drawImage(
+        //         // Image
+        //         sonic,
+        //         // Selection
+        //         // -- Add MARIO_WIDTH to sx on each consecutive tick.
+        //         // -- %8 to wrap the values around to keep repeating 0 to 8.
+        //         // -- 8 Because in the sprite we have 8 mario poses in one row.
+        //         (sonic_w * (Math.floor(currentFrame) % 8)),
+        //         sonic_h * 2, // sy
+        //         sonic_w, // sWidth
+        //         sonic_h, // sHeight
+        //         // Drawing
+        //         player1.x, // dx
+        //         player1.y, // dy
+        //         sonic_w, // dWidth
+        //         sonic_h // dHeight
+        //     );
+        //     currentFrame += 0.2;
+        //     requestAnimationFrame(sprite);
+        // }
+
+    </script>
+
+</body>
+
+</html>
