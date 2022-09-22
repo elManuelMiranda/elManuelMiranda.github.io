@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://kit.fontawesome.com/11ad6245f2.js" crossorigin="anonymous"></script>
+    <title>Series</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous" />
+    <script src="https://kit.fontawesome.com/11ad6245f2.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="css/Movie.css" />
+</head>
+
+<body>
+    <header>
+        <nav class="navbar navbar-dark bg-dark">
+            <div class="container-fluid">
+                <img src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue_short-8e7b30f73a4020692ccca9c88bafe5dcb6f8a62a4c6bc55cd9ba82bb2cd95f6c.svg"
+                    height="20" />
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText"
+                    aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarText">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link" href="Home.html">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="Index.html">Logout</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div id="contenedor" class="ctn">
+        <div class="card m-2">
+            <div class="row g-0">
+                <div class="col-4">
+                    <img :src="'https://image.tmdb.org/t/p/original/' + series.poster_path" class="card-img-top"
+                        :alt="'Poster of ' + series.name" />
+                </div>
+                <div class="col-8">
+                    <div class="card-body">
+                        <h1 class="card-title">{{series.name}}</h1>
+                        <h4>First air date: {{series.first_air_date}}</h4>
+                        <br />
+
+                        <p>
+                            <b><i>{{series.tagline}}</i></b>
+                        </p>
+                        <!--CONTENEDOR DE FAVORITOS -->
+                        <template v-if="stats.favorite == true">
+                            <a class="btn btn-primary m-1" role="button" @click="removeFavorite">
+                                <i class="fa-solid fa-heart" style="color: red"></i>
+                            </a>
+                        </template>
+                        <template v-else>
+                            <a class="btn btn-primary m-1" role="button" @click="addFavorite">
+                                <i class="fa-solid fa-heart"></i>
+                            </a>
+                        </template>
+                        <!-- BOTON DE RATE -->
+                        <template v-if="stats.rated == false">
+                            <a class="btn btn-primary m-1" data-bs-toggle="collapse" href="#rate" role="button"
+                                aria-expanded="false" aria-controls="collapseExample">
+                                <i class="fa-solid fa-star"></i>
+                            </a>
+                        </template>
+                        <template v-else>
+                            <a class="btn btn-primary m-1" data-bs-toggle="collapse" href="#rate" role="button"
+                                aria-expanded="false" aria-controls="collapseExample">
+                                <i class="fa-solid fa-star" style="color: gold;"></i>
+                            </a>
+                        </template>
+                        <!-- CONTENEDOR DE RATING -->
+                        <div class="collapse" id="rate">
+                            <div class="card card-body">
+                                <label for="customRange2" class="form-label">Rate this film</label>
+                                <star-rating v-bind:increment="0.5" v-model:rating="rating"
+                                    @update:rating="changeRating">
+                                </star-rating>
+                                <!-- <input v-model="sliderVal" type="range" class="form-range" min="0" max="5" step="0.5"
+                                    id="customRange2" @change="changeRate"> -->
+                            </div>
+                        </div>
+                        <!-- ESTRELLAS Y BOTON REMOVE RATING -->
+                        <template v-if="stats.rated != false">
+                            <template v-for="r in ratedSeries.results">
+                                <template v-if="r.id == this.serieId">
+                                    <b style="color: gold">{{r.rating}} <i class="fa-solid fa-star"></i></b>
+                                </template>
+                            </template>
+                            <a class="btn btn-danger m-1" role="button" @click="removeRating">
+                                Remove rate
+                            </a>
+                        </template>
+                        <!-- CONTENEDOR DE TRAILER -->
+                        <template v-for="tra in trailer.results">
+                            <template v-if="tra.name == 'Official Trailer'">
+                                <a class="btn btn-primary m-1"
+                                    :href="'https://www.youtube.com/embed/' + tra.key + '?autoplay=1&origin=https%3A%2F%2Fwww.themoviedb.org&hl=en&modestbranding=1&fs=1&autohide=1'"
+                                    role="button">
+                                    <i class="fa-solid fa-play"></i> Play trailer
+                                </a>
+                            </template>
+                        </template>
+
+                        <h5>Overview</h5>
+                        <p>{{series.overview}}</p>
+
+                        <b>Status:</b><br />
+                        <p class="card-title">{{series.status}}</p>
+
+                        <b>Network:</b><br />
+                        <template v-for="s in series.networks">
+                            <img :src="'https://image.tmdb.org/t/p/h30/' + s.logo_path"
+                                :alt="'Logo of ' + s.name" /><br />
+                        </template>
+
+                        <b>Type:</b><br />
+                        <p class="card-title">{{series.type}}</p>
+                        <b>Original Language:</b><br />
+                        <template v-for="s in series.spoken_languages">
+                            <p class="card-title">{{s.english_name}}</p>
+                        </template>
+
+                        <b>Generos:</b><br />
+                        <div v-for="s in series.genres">
+                            <a @click="getdetails(s.id)" style="cursor: pointer">{{s.name}}</a>
+                        </div>
+                        <b>Keywords:</b><br />
+                        <div v-for="k in keywords.results">
+                            <a @click="getkeywords(k.id)" style="cursor: pointer">{{k.name}}</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--CONTENEDOR DE ACTORES -->
+        <div class="container">
+            <b>Top Billed Cast</b>
+            <div class="scroll">
+                <div class="card" v-for="act in actors.cast">
+                    <template v-if="act.profile_path == null && act.gender == 1">
+                        <img src="https://www.themoviedb.org/assets/2/v4/glyphicons/basic/glyphicons-basic-36-user-female-grey-d9222f16ec16a33ed5e2c9bbdca07a4c48db14008bbebbabced8f8ed1fa2ad59.svg"
+                            class="card-img-top" alt="..." />
+                    </template>
+                    <template v-else-if="act.profile_path == null">
+                        <img src="https://www.themoviedb.org/assets/2/v4/glyphicons/basic/glyphicons-basic-4-user-grey-d8fe957375e70239d6abdd549fd7568c89281b2179b5f4470e2e12895792dfa5.svg"
+                            class="card-img-top" alt="..." />
+                    </template>
+                    <template v-else>
+                        <img :src="'https://image.tmdb.org/t/p/original' + act.profile_path" class="card-img-top"
+                            alt="..." />
+                    </template>
+                    <div class="card-body">
+                        <h3 class="card-title">{{act.name}}</h3>
+                        <h4 class="card-subtitle mb-2 text-muted">{{act.character}}</h4>
+                        <a class="btn btn-primary" data-bs-toggle="collapse" role="button"
+                            @click=" getdetailsArtista(act.id)">Ver Mas</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--CONTENEDOR DE TEMPORADAS -->
+        <div class="container">
+            <b>Temporadas</b>
+
+            <div class="card mb-3" style="max-width: 540px" v-for="s in series.seasons">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <a @click="getserieId(series.id,s.season_number)" style="cursor: pointer">
+                            <img :src="'https://image.tmdb.org/t/p/original'+s.poster_path" class="card-img-top"
+                                alt="..." /></a>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <a @click="getserieId(series.id,s.season_number)" style="cursor: pointer">
+                                <h4 class="card-title">{{s.name}}</h4>
+                            </a>
+                            <p class="card-title">{{s.air_date}} | {{s.episode_count}}</p>
+                            <p class="card-text">{{s.overview}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- RECOMENDACIONES -->
+        <div class="container">
+            <b>Recommendations</b>
+            <div class="scroll">
+                <template v-if="recomendaciones.results == ''">
+                    <h3>There are no recommendations for this movie.</h3>
+                </template>
+                <template v-else>
+                    <div class="card" v-for="r in recomendaciones.results">
+                        <template v-if="r.backdrop_path == null">
+                            <a @click="getrecomendaciones(r.id)">
+                                <img src="https://www.themoviedb.org/assets/2/v4/glyphicons/basic/glyphicons-basic-38-picture-grey-c2ebdbb057f2a7614185931650f8cee23fa137b93812ccb132b9df511df1cfac.svg"
+                                    class="card-img-top" alt="..." /></a>
+                        </template>
+                        <template v-else>
+                            <a @click="getrecomendaciones(r.id)">
+                                <img :src="'https://image.tmdb.org/t/p/original'+r.backdrop_path" class="card-img-top"
+                                    alt="..." /></a>
+                        </template>
+                        <div class="card-body">
+                            <h4 class="card-title">{{r.name}}</h4>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/vue@3"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/vue-star-rating@next/dist/VueStarRating.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
+        crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+        const { createApp } = Vue;
+        const app = createApp({
+            data() {
+                return {
+                    stats: "",
+                    seriesId: "",
+                    recomendaciones: "",
+                    trailer: "",
+                    series: "",
+                    keywords: "",
+                    actors: "",
+                    season: "",
+                    filepath: "",
+                    ratedSeries: ""
+                };
+            },
+            methods: {
+                getAccStats() {
+                    const a = this;
+
+                    var config = {
+                        method: "get",
+                        url: "https://api.themoviedb.org/3/tv/" + this.serieId + "/account_states",
+                        headers: {
+                            Authorization:
+                                "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3MDNjMmNjMTAzOTZhMjNhMWI0MDJhNTY1NzBmMjcyYSIsInN1YiI6IjYzMWY2N2YwY2MyNzdjMDA4YTYwZTk2MyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.3CT5M1tU9-6l5b-KsGpgnwtU2dRP9GN3mEl2LaWug10",
+                        },
+                    };
+
+                    axios(config)
+                        .then(function (response) {
+                            a.stats = response.data;
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                },
+                changeRating(rating) {
+                    this.rating = rating;
+                    var data = JSON.stringify({
+                        "value": rating,
+                    });
+                    var config = {
+                        method: "post",
+                        url: "https://api.themoviedb.org/3/tv/" + this.serieId + "/rating",
+                        headers: {
+                            Authorization:
+                                "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3MDNjMmNjMTAzOTZhMjNhMWI0MDJhNTY1NzBmMjcyYSIsInN1YiI6IjYzMWY2N2YwY2MyNzdjMDA4YTYwZTk2MyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.3CT5M1tU9-6l5b-KsGpgnwtU2dRP9GN3mEl2LaWug10",
+                            "Content-Type": "application/json",
+                        },
+                        data: data,
+                    };
+
+                    axios(config)
+                        .then(function (response) {
+                            window.location.href = "Serie.html";
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                },
+                removeRating() {
+                    var config = {
+                        method: "delete",
+                        url: "https://api.themoviedb.org/3/tv/" + this.serieId + "/rating",
+                        headers: {
+                            Authorization:
+                                "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3MDNjMmNjMTAzOTZhMjNhMWI0MDJhNTY1NzBmMjcyYSIsInN1YiI6IjYzMWY2N2YwY2MyNzdjMDA4YTYwZTk2MyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.3CT5M1tU9-6l5b-KsGpgnwtU2dRP9GN3mEl2LaWug10",
+                        },
+                    };
+                    axios(config)
+                        .then(function (response) {
+                            window.location.href = "Serie.html";
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                },
+                getRatings() {
+                    const r = this;
+                    var config = {
+                        method: "get",
+                        url: "https://api.themoviedb.org/3/account/" + this.accountId + "/rated/tv",
+                        headers: {
+                            Authorization:
+                                "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3MDNjMmNjMTAzOTZhMjNhMWI0MDJhNTY1NzBmMjcyYSIsInN1YiI6IjYzMWY2N2YwY2MyNzdjMDA4YTYwZTk2MyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.3CT5M1tU9-6l5b-KsGpgnwtU2dRP9GN3mEl2LaWug10",
+                        },
+                    };
+
+                    axios(config)
+                        .then(function (response) {
+                            r.ratedSeries = response.data;
+
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                },
+                addFavorite(favorite) {
+                    var data = JSON.stringify({
+                        media_type: "tv",
+                        media_id: this.serieId,
+                        favorite: true,
+                    });
+
+                    var config = {
+                        method: "post",
+                        url:
+                            "https://api.themoviedb.org/3/account/" +
+                            this.accountId +
+                            "/favorite",
+                        headers: {
+                            Authorization:
+                                "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3MDNjMmNjMTAzOTZhMjNhMWI0MDJhNTY1NzBmMjcyYSIsInN1YiI6IjYzMWY2N2YwY2MyNzdjMDA4YTYwZTk2MyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.3CT5M1tU9-6l5b-KsGpgnwtU2dRP9GN3mEl2LaWug10",
+                            "Content-Type": "application/json",
+                        },
+                        data: data,
+                    };
+
+                    axios(config)
+                        .then(function (response) {
+                            alert("Favorite added");
+                            window.location.href = "Serie.html";
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                },
+                removeFavorite(favorite) {
+                    var data = JSON.stringify({
+                        media_type: "tv",
+                        media_id: this.serieId,
+                        favorite: false,
+                    });
+
+                    var config = {
+                        method: "post",
+                        url:
+                            "https://api.themoviedb.org/3/account/" +
+                            this.accountId +
+                            "/favorite",
+                        headers: {
+                            Authorization:
+                                "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3MDNjMmNjMTAzOTZhMjNhMWI0MDJhNTY1NzBmMjcyYSIsInN1YiI6IjYzMWY2N2YwY2MyNzdjMDA4YTYwZTk2MyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.3CT5M1tU9-6l5b-KsGpgnwtU2dRP9GN3mEl2LaWug10",
+                            "Content-Type": "application/json",
+                        },
+                        data: data,
+                    };
+
+                    axios(config)
+                        .then(function (response) {
+                            alert("Favorite removed");
+                            window.location.href = "Serie.html";
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                },
+                getdetails(g) {
+                    localStorage.setItem("genreId", JSON.stringify(g));
+                    window.location.href = "Genre.html";
+                },
+                getdetailsArtista(art) {
+                    localStorage.setItem("artisId", JSON.stringify(art));
+                    window.location.href = "Cast.html";
+                },
+                getkeywords(g) {
+                    localStorage.setItem("keyserieId", JSON.stringify(g));
+                    window.location.href = "Keywords.html";
+                },
+                getrecomendaciones(g) {
+                    localStorage.setItem("serieId", JSON.stringify(g));
+                    window.location.href = "Serie.html";
+                },
+                recomendacion() {
+                    const r = this;
+                    var config = {
+                        method: "get",
+                        url:
+                            "https://api.themoviedb.org/3/tv/" +
+                            this.serieId +
+                            "/recommendations?",
+                        headers: {
+                            "Content-Type": "application/json;charset=utf-8",
+                            Authorization:
+                                "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3MDNjMmNjMTAzOTZhMjNhMWI0MDJhNTY1NzBmMjcyYSIsInN1YiI6IjYzMWY2N2YwY2MyNzdjMDA4YTYwZTk2MyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.3CT5M1tU9-6l5b-KsGpgnwtU2dRP9GN3mEl2LaWug10",
+                        },
+                    };
+
+                    axios(config)
+                        .then(function (response) {
+                            r.recomendaciones = response.data;
+
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                },
+                getserieId(s, t) {
+
+                    localStorage.setItem("serieId", JSON.stringify(s));
+                    localStorage.setItem("seasonId", JSON.stringify(t));
+                    window.location.href = "Season.html";
+                },
+                trailers() {
+                    const tra = this;
+                    var config = {
+                        method: "get",
+                        url:
+                            "https://api.themoviedb.org/3/tv/" + this.serieId + "/videos?",
+                        headers: {
+                            Authorization:
+                                "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3MDNjMmNjMTAzOTZhMjNhMWI0MDJhNTY1NzBmMjcyYSIsInN1YiI6IjYzMWY2N2YwY2MyNzdjMDA4YTYwZTk2MyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.3CT5M1tU9-6l5b-KsGpgnwtU2dRP9GN3mEl2LaWug10",
+                        },
+                    };
+
+                    axios(config)
+                        .then(function (response) {
+                            tra.trailer = response.data;
+
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                },
+                seriesKeywords() {
+                    const k = this;
+                    var config = {
+                        method: "get",
+                        url:
+                            "https://api.themoviedb.org/3/tv/" + this.serieId + "/keywords",
+                        headers: {
+                            Authorization:
+                                "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3MDNjMmNjMTAzOTZhMjNhMWI0MDJhNTY1NzBmMjcyYSIsInN1YiI6IjYzMWY2N2YwY2MyNzdjMDA4YTYwZTk2MyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.3CT5M1tU9-6l5b-KsGpgnwtU2dRP9GN3mEl2LaWug10",
+                        },
+                    };
+
+                    axios(config)
+                        .then(function (response) {
+                            k.keywords = response.data;
+
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                },
+                serieActors() {
+                    const act = this;
+                    var config = {
+                        method: "get",
+                        url:
+                            "https://api.themoviedb.org/3/tv/" +
+                            this.serieId +
+                            "/aggregate_credits?",
+                        headers: {
+                            Authorization:
+                                "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3MDNjMmNjMTAzOTZhMjNhMWI0MDJhNTY1NzBmMjcyYSIsInN1YiI6IjYzMWY2N2YwY2MyNzdjMDA4YTYwZTk2MyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.3CT5M1tU9-6l5b-KsGpgnwtU2dRP9GN3mEl2LaWug10",
+                        },
+                    };
+                    axios(config)
+                        .then(function (response) {
+                            act.actors = response.data;
+
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                },
+
+                seriesDetails() {
+                    const s = this;
+                    var config = {
+                        method: "get",
+                        url: "https://api.themoviedb.org/3/tv/" + this.serieId,
+                        headers: {
+                            Authorization:
+                                "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3MDNjMmNjMTAzOTZhMjNhMWI0MDJhNTY1NzBmMjcyYSIsInN1YiI6IjYzMWY2N2YwY2MyNzdjMDA4YTYwZTk2MyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.3CT5M1tU9-6l5b-KsGpgnwtU2dRP9GN3mEl2LaWug10",
+                        },
+                    };
+                    axios(config)
+                        .then(function (response) {
+                            s.series = response.data;
+
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                },
+            },
+            mounted() {
+                var serieId = localStorage.getItem("serieId");
+                serieId = JSON.parse(serieId);
+                this.serieId = serieId;
+                var accountId = localStorage.getItem("accountId");
+                accountId = JSON.parse(accountId);
+                this.accountId = accountId;
+                this.getAccStats();
+                this.seriesDetails();
+                this.serieActors();
+                this.seriesKeywords();
+                this.recomendacion();
+                this.getRatings();
+                this.trailers();
+            },
+        })
+            .component("star-rating", VueStarRating.default)
+            .mount("#contenedor");
+    </script>
+</body>
+
+</html>

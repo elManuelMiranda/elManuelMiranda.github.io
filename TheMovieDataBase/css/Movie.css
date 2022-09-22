@@ -1,0 +1,16 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+body .ctn .container .scroll {
+  flex: 1;
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+}
+body .ctn .container .scroll .card {
+  flex: auto;
+  flex-shrink: 0;
+  margin: 5px;
+  max-width: 300px;
+}

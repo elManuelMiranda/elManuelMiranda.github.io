@@ -1,0 +1,40 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+body .ctn .banner {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  text-align: left;
+  color: white;
+}
+body .ctn .banner img {
+  width: 80%;
+}
+body .ctn .banner .centered {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+body .ctn .ctn-main .row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+body .ctn .ctn-main .row .movies-ctn .container .scroll {
+  flex: 1;
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+}
+body .ctn .ctn-main .row .movies-ctn .container .scroll .card {
+  flex: auto;
+  flex-shrink: 0;
+  margin: 5px;
+  max-width: 300px;
+}

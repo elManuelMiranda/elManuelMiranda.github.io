@@ -1,0 +1,59 @@
+// Version 1
+
+* {
+    padding: 0;
+    margin: 0;
+}
+
+.display-flex() {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+body {
+    .ctn {
+        .banner {
+            .display-flex();
+            position: relative;
+            text-align: left;
+            color: white;
+
+            img {
+                width: 80%;
+            }
+
+            .centered {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+        }
+
+        .ctn-main {
+            .row {
+                .display-flex();
+
+                .movies-ctn {
+                    .container {
+                        .scroll {
+                            flex: 1;
+                            display: flex;
+                            flex-wrap: nowrap;
+                            overflow-x: auto;
+
+                            .card {
+                                flex: auto;
+                                flex-shrink: 0;
+                                margin: 5px;
+                                max-width: 300px;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

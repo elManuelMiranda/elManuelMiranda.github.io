@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <script src="https://unpkg.com/vue@3"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://kit.fontawesome.com/11ad6245f2.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="css/Index.css" />
+  </head>
+  <body>
+    <div id="contenedor" class="formulario">
+      <div class="background">
+        <div class="shape"></div>
+        <div class="shape"></div>
+      </div>
+
+      <form>
+        <h3>Login</h3>
+        <!-- Email input -->
+        <div class="form-outline mb-4">
+          <label class="form-label" for="form2Example1">Username </label>
+          <input type="email" v-model="email" placeholder="Username" required />
+        </div>
+        <!-- Password input -->
+        <div class="form-outline mb-4">
+          <label class="form-label" for="form2Example2">Password</label>
+          <input
+            type="password"
+            v-model="password"
+            placeholder="Password"
+            required
+          />
+        </div>
+        <!-- Submit button -->
+        <button @click="login">Log in</button>
+      </form>
+    </div>
+    <script type="text/javascript">
+      const { createApp } = Vue;
+      const app = createApp({
+        data() {
+          return {
+            users: null,
+            email: "",
+            password: "",
+          };
+        },
+        methods: {
+          login(e) {
+            var data = new FormData();
+            data.append("username", this.email); //theManuelMiranda
+            data.append("password", this.password); //KT!KugPZagy5@f4
+            data.append("request_token", "");
+            var config = {
+              method: "post",
+              url: "https://api.themoviedb.org/3/authentication/token/validate_with_login",
+              headers: {
+                Authorization:
+                  "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3MDNjMmNjMTAzOTZhMjNhMWI0MDJhNTY1NzBmMjcyYSIsInN1YiI6IjYzMWY2N2YwY2MyNzdjMDA4YTYwZTk2MyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.3CT5M1tU9-6l5b-KsGpgnwtU2dRP9GN3mEl2LaWug10",
+              },
+              data: data,
+            };
+            axios(config)
+              .then(function (response) {
+                if (response.data.success) {
+                  window.location.href = "Home.html";
+                }
+                console.log(JSON.stringify(response.data));
+              })
+              .catch(function (error) {
+                console.log(error);
+                alert("Email or password are incorrect.");
+              });
+
+            e.preventDefault();
+          },
+        },
+        mounted() {
+        },
+      }).mount("#contenedor");
+    </script>
+  </body>
+</html>

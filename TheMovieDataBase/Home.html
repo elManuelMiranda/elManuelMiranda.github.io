@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home</title>
+    <script src="https://kit.fontawesome.com/11ad6245f2.js" crossorigin="anonymous"></script>
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous" />
+    <link rel="stylesheet" href="css/Home.css" />
+</head>
+
+<body>
+    <div id="contenedor" class="ctn">
+        <!-- NAV BAR-->
+        <header>
+            <nav class="navbar navbar-dark bg-dark">
+                <div class="container-fluid">
+                    <img src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue_short-8e7b30f73a4020692ccca9c88bafe5dcb6f8a62a4c6bc55cd9ba82bb2cd95f6c.svg"
+                        height="20" />
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText"
+                        aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarText">
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                            <li class="nav-item">
+                                <a class="nav-link" href="Home.html">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="Index.html">Logout</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <section>
+            <!-- WELCOME -->
+            <div class="banner">
+                <img src="https://www.themoviedb.org/t/p/w1920_and_h600_multi_faces_filter(duotone,032541,01b4e4)/5GISMqlRXMEyBrgEqyvhaMMuQmJ.jpg"
+                    alt="Banner" />
+                <div class="centered">
+                    <h1>Welcome.</h1>
+                    <br />
+                    <h3>
+                        Millions of movies, TV shows and people to discover. Explore now.
+                    </h3>
+                </div>
+            </div>
+
+            <!-- CONTENEDOR LINKS -->
+            <div class="ctn-main m-5">
+                <div class="row">
+                    <h3>What's Popular</h3>
+                    <!-- TABS WITH PILLS POP MOVIES/SERIES -->
+                    <ul class="nav nav-pills m-3" id="myTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="popMovies-tab" data-bs-toggle="tab"
+                                data-bs-target="#popMovies" type="button" role="tab" aria-controls="popMovies"
+                                aria-selected="true">
+                                Popular movies
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="popSeries-tab" data-bs-toggle="tab" data-bs-target="#popSeries"
+                                type="button" role="tab" aria-controls="popSeries" aria-selected="false">
+                                Popular series
+                            </button>
+                        </li>
+                    </ul>
+                    <!-- CONTENEDOR PELICULAS Y SERIES -->
+                    <div class="tab-content" id="myTabContent">
+                        <div class="movies-ctn tab-pane fade show active" id="popMovies" role="tabpanel"
+                            aria-labelledby="popMovies-tab" tabindex="0">
+                            <div class="container">
+                                <div class="scroll">
+                                    <div class="card" v-for="m in movies">
+                                        <img :src="'https://image.tmdb.org/t/p/original/' + m.poster_path"
+                                            class="card-img-top" alt="..." />
+                                        <div class="card-body">
+                                            <h3 class="card-title">{{m.title}}</h3>
+                                            <h4 class="card-subtitle mb-2 text-muted">
+                                                {{m.original_title}}
+                                            </h4>
+                                            <p class="card-text">
+                                                {{m.release_date}}<br />{{m.vote_average}}
+                                                <i class="fa-solid fa-star"></i>
+                                            </p>
+                                            <a class="btn btn-primary" data-bs-toggle="collapse" role="button"
+                                                @click="details(m.id, account.id)">
+                                                Details
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="movies-ctn tab-pane fade" id="popSeries" role="tabpanel"
+                            aria-labelledby="popSeries-tab" tabindex="0">
+                            <div class="container">
+                                <div class="scroll">
+                                    <div class="card" v-for="serie in series">
+                                        <img :src="'https://image.tmdb.org/t/p/original' + serie.poster_path"
+                                            class="card-img-top" alt="..." />
+                                        <div class="card-body">
+                                            <h3 class="card-title">{{serie.name}}</h3>
+                                            <h4 class="card-subtitle mb-2 text-muted">
+                                                {{serie.original_title}}
+                                            </h4>
+                                            <p class="card-text">
+                                                {{serie.release_date}}<br />{{serie.vote_average}}
+                                                <i class="fa-solid fa-star"></i>
+                                            </p>
+                                            <a class="btn btn-primary" data-bs-toggle="collapse" role="button"
+                                                @click="detailSerie(serie.id, account.id)">
+                                                Details
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <h3>Free To Watch</h3>
+                    <!-- TABS WITH PILLS FREE MOVIES/SERIES -->
+                    <ul class="nav nav-pills m-3" id="myTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="ftwMovies-tab" data-bs-toggle="tab"
+                                data-bs-target="#ftwMovies" type="button" role="tab" aria-controls="ftwMovies"
+                                aria-selected="true">
+                                Movies
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="ftwSeries-tab" data-bs-toggle="tab" data-bs-target="#ftwSeries"
+                                type="button" role="tab" aria-controls="ftwSeries" aria-selected="false">
+                                Series
+                            </button>
+                        </li>
+                    </ul>
+                    <!-- CONTENEDOR FREE TO WATCH MOVIES/SERIES -->
+                    <div class="tab-content" id="myTabContent">
+                        <!-- MOVIES -->
+                        <div class="movies-ctn tab-pane fade show active" id="ftwMovies" role="tabpanel"
+                            aria-labelledby="ftwMovies-tab" tabindex="0">
+                            <div class="container">
+                                <div class="scroll">
+                                    <div class="card" v-for="fr in freemovie.results">
+                                        <img :src="'https://image.tmdb.org/t/p/original/' + fr.poster_path"
+                                            class="card-img-top" alt="..." />
+                                        <div class="card-body">
+                                            <h3 class="card-title">{{fr.title}}</h3>
+                                            <h4 class="card-subtitle mb-2 text-muted">
+                                                {{fr.original_title}}
+                                            </h4>
+                                            <p class="card-text">
+                                                {{fr.release_date}}<br />{{fr.vote_average}}
+                                                <i class="fa-solid fa-star"></i>
+                                            </p>
+                                            <a class="btn btn-primary" data-bs-toggle="collapse" role="button"
+                                                @click="details(fr.id, account.id)">
+                                                Details
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- SERIES -->
+                        <div class="movies-ctn tab-pane fade" id="ftwSeries" role="tabpanel"
+                            aria-labelledby="ftwSeries-tab" tabindex="0">
+                            <div class="container">
+                                <div class="scroll">
+                                    <div class="card" v-for="tv in freetv.results">
+                                        <img :src="'https://image.tmdb.org/t/p/original' + tv.poster_path"
+                                            class="card-img-top" alt="..." />
+                                        <div class="card-body">
+                                            <h3 class="card-title">{{tv.name}}</h3>
+                                            <h4 class="card-subtitle mb-2 text-muted">
+                                                {{tv.original_title}}
+                                            </h4>
+                                            <p class="card-text">
+                                                {{tv.release_date}}<br />{{tv.vote_average}}
+                                                <i class="fa-solid fa-star"></i>
+                                            </p>
+                                            <a class="btn btn-primary" data-bs-toggle="collapse" role="button"
+                                                @click="detailSerie(tv.id, account.id)">
+                                                Details
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <!-- TABS WITH PILLS TRENDING DAY/WEEK -->
+                    <h3>Trending</h3>
+                    <ul class="nav nav-pills m-3" id="myTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="trendingToday-tab" data-bs-toggle="tab"
+                                data-bs-target="#trendingToday" type="button" role="tab" aria-controls="trendingToday"
+                                aria-selected="true">
+                                Today
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="trendingWeek-tab" data-bs-toggle="tab"
+                                data-bs-target="#trendingWeek" type="button" role="tab" aria-controls="trendingWeek"
+                                aria-selected="false">
+                                This Week
+                            </button>
+                        </li>
+                    </ul>
+                    <!-- CONTENEDOR TRENDING -->
+                    <div class="tab-content" id="myTabContent">
+                        <div class="movies-ctn tab-pane fade show active" id="trendingToday" role="tabpanel"
+                            aria-labelledby="trendingToday-tab" tabindex="0">
+                            <div class="container">
+                                <div class="scroll">
+                                    <div class="card" v-for="trending in trendings">
+                                        <img :src="'https://image.tmdb.org/t/p/original' + trending.poster_path"
+                                            class="card-img-top" alt="..." />
+                                        <div class="card-body" v-if="trending.media_type == 'movie'">
+                                            <h3 class="card-title">{{trending.title}}</h3>
+                                            <h4 class="card-subtitle mb-2 text-muted">
+                                                {{trending.original_title}}
+                                            </h4>
+                                            <p class="card-text">
+                                                {{trending.release_date}}<br />{{trending.vote_average}}
+                                                <i class="fa-solid fa-star"></i>
+                                            </p>
+                                            <a class="btn btn-primary" data-bs-toggle="collapse" role="button"
+                                                @click="details(trending.id, account.id)">
+                                                Details
+                                            </a>
+                                        </div>
+                                        <div class="card-body" v-if="trending.media_type == 'tv'">
+                                            <h3 class="card-title">{{trending.name}}</h3>
+                                            <h4 class="card-subtitle mb-2 text-muted">
+                                                {{trending.name}}
+                                            </h4>
+                                            <p class="card-text">
+                                                {{trending.release_date}}<br />{{trending.vote_average}}
+                                                <i class="fa-solid fa-star"></i>
+                                            </p>
+                                            <a class="btn btn-primary" data-bs-toggle="collapse" role="button"
+                                                @click="detailSerie(trending.id, account.id)">
+                                                Details
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="movies-ctn tab-pane fade" id="trendingWeek" role="tabpanel"
+                            aria-labelledby="trendingWeek-tab" tabindex="0">
+                            <div class="container">
+                                <div class="scroll">
+                                    <div class="card" v-for="trendingw in trendingsw">
+                                        <img :src="'https://image.tmdb.org/t/p/original' + trendingw.poster_path"
+                                            class="card-img-top" alt="..." />
+                                        <div class="card-body" v-if="trendingw.media_type == 'movie'">
+                                            <h3 class="card-title">{{trendingw.title}}</h3>
+                                            <h4 class="card-subtitle mb-2 text-muted">
+                                                {{trendingw.original_title}}
+                                            </h4>
+                                            <p class="card-text">
+                                                {{trendingw.release_date}}<br />{{trendingw.vote_average}}
+                                                <i class="fa-solid fa-star"></i>
+                                            </p>
+                                            <a class="btn btn-primary" data-bs-toggle="collapse" role="button"
+                                                @click="details(trendingw.id, account.id)">
+                                                Details
+                                            </a>
+                                        </div>
+                                        <div class="card-body" v-if="trendingw.media_type == 'tv'">
+                                            <h3 class="card-title">{{trendingw.name}}</h3>
+                                            <h4 class="card-subtitle mb-2 text-muted">
+                                                {{trendingw.name}}
+                                            </h4>
+                                            <p class="card-text">
+                                                {{trendingw.release_date}}<br />{{trendingw.vote_average}}
+                                                <i class="fa-solid fa-star"></i>
+                                            </p>
+                                            <a class="btn btn-primary" data-bs-toggle="collapse" role="button"
+                                                @click="detailSerie(trendingw.id, account.id)">
+                                                Details
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="https://unpkg.com/vue@3"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <!-- JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
+        crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        const { createApp } = Vue;
+
+        const app = createApp({
+            data() {
+                return {
+                    movies: "",
+                    series: "",
+                    trendings: "",
+                    trendingsw: "",
+                    account: "",
+                    freemovie: "",
+                    freetv: "",
+                };
+            },
+            methods: {
+                getAcc() {
+                    const a = this;
+                    var config = {
+                        method: "get",
+                        url: "https://api.themoviedb.org/3/account",
+                        headers: {
+                            Authorization:
+                                "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3MDNjMmNjMTAzOTZhMjNhMWI0MDJhNTY1NzBmMjcyYSIsInN1YiI6IjYzMWY2N2YwY2MyNzdjMDA4YTYwZTk2MyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.3CT5M1tU9-6l5b-KsGpgnwtU2dRP9GN3mEl2LaWug10",
+                        },
+                    };
+
+                    axios(config)
+                        .then(function (response) {
+                            a.account = response.data;
+
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                },
+                topFilms() {
+                    const c = this;
+                    var config = {
+                        method: "get",
+                        url: "https://api.themoviedb.org/3/movie/popular",
+                        headers: {
+                            Authorization:
+                                "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3MDNjMmNjMTAzOTZhMjNhMWI0MDJhNTY1NzBmMjcyYSIsInN1YiI6IjYzMWY2N2YwY2MyNzdjMDA4YTYwZTk2MyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.3CT5M1tU9-6l5b-KsGpgnwtU2dRP9GN3mEl2LaWug10",
+                        },
+                    };
+
+                    axios(config)
+                        .then(function (response) {
+                            c.movies = response.data.results;
+     
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                },
+                details(m, a) {
+                
+                    localStorage.setItem("filmId", JSON.stringify(m));
+                    localStorage.setItem("accountId", JSON.stringify(a));
+                    window.location.href = "Movie.html";
+                },
+                topSeries() {
+                    var s = this;
+                    var config = {
+                        method: "get",
+                        url: "https://api.themoviedb.org/3/tv/popular",
+                        headers: {
+                            Authorization:
+                                "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3MDNjMmNjMTAzOTZhMjNhMWI0MDJhNTY1NzBmMjcyYSIsInN1YiI6IjYzMWY2N2YwY2MyNzdjMDA4YTYwZTk2MyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.3CT5M1tU9-6l5b-KsGpgnwtU2dRP9GN3mEl2LaWug10",
+                        },
+                    };
+
+                    axios(config)
+                        .then(function (response) {
+                            s.series = response.data.results;
+                 
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                },
+                detailSerie(s, a) {
+                    localStorage.setItem("serieId", JSON.stringify(s));
+                    localStorage.setItem("accountId", JSON.stringify(a));
+                    window.location.href = "Serie.html";
+                },
+                trending() {
+                    var t = this;
+                    var config = {
+                        method: "get",
+                        url: "https://api.themoviedb.org/3/trending/all/day",
+                        headers: {
+                            Authorization:
+                                "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3MDNjMmNjMTAzOTZhMjNhMWI0MDJhNTY1NzBmMjcyYSIsInN1YiI6IjYzMWY2N2YwY2MyNzdjMDA4YTYwZTk2MyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.3CT5M1tU9-6l5b-KsGpgnwtU2dRP9GN3mEl2LaWug10",
+                        },
+                    };
+                    axios(config)
+                        .then(function (response) {
+                            t.trendings = response.data.results;
+                           
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                },
+                trendingw() {
+                    var tw = this;
+                    var config = {
+                        method: "get",
+                        url: "https://api.themoviedb.org/3/trending/all/week",
+                        headers: {
+                            Authorization:
+                                "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3MDNjMmNjMTAzOTZhMjNhMWI0MDJhNTY1NzBmMjcyYSIsInN1YiI6IjYzMWY2N2YwY2MyNzdjMDA4YTYwZTk2MyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.3CT5M1tU9-6l5b-KsGpgnwtU2dRP9GN3mEl2LaWug10",
+                        },
+                    };
+                    axios(config)
+                        .then(function (response) {
+                            tw.trendingsw = response.data.results;
+                            
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                },
+                getfreemovie() {
+                    const fr = this;
+                    var config = {
+                        method: "get",
+                        url: 'https://api.themoviedb.org/3/discover/movie?language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=3&with_watch_monetization_types=free',
+                        headers: {
+                            'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3MDNjMmNjMTAzOTZhMjNhMWI0MDJhNTY1NzBmMjcyYSIsInN1YiI6IjYzMWY2N2YwY2MyNzdjMDA4YTYwZTk2MyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.3CT5M1tU9-6l5b-KsGpgnwtU2dRP9GN3mEl2LaWug10'
+                        },
+                    };
+
+                    axios(config)
+                        .then(function (response) {
+                            fr.freemovie = response.data;
+                          
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                },
+                getfreetv() {
+                    const tv = this;
+                    var config = {
+                        method: "get",
+                        url: 'https://api.themoviedb.org/3/discover/tv?language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=3&with_watch_monetization_types=free',
+                        headers: {
+                            'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3MDNjMmNjMTAzOTZhMjNhMWI0MDJhNTY1NzBmMjcyYSIsInN1YiI6IjYzMWY2N2YwY2MyNzdjMDA4YTYwZTk2MyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.3CT5M1tU9-6l5b-KsGpgnwtU2dRP9GN3mEl2LaWug10'
+                        },
+                    };
+
+                    axios(config)
+                        .then(function (response) {
+                            tv.freetv = response.data;
+                   
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                },
+
+            },
+            mounted() {
+                this.getAcc();
+                this.trendingw();
+                this.trending();
+                this.topSeries();
+                this.topFilms();
+                this.getfreemovie();
+                this.getfreetv();
+            },
+        }).mount("#contenedor");
+    </script>
+</body>
+
+</html>
