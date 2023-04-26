@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/addons/p5.dom.min.js"></script>
+    <script>
+      let parts;
+      let canvas;
+
+      function setup() {
+        canvas = createCanvas(500, 500);
+        canvas.parent("sketch-container");
+        createP("Numero de partes:");
+        let input = createInput();
+        input.parent("sketch-container");
+        input.changed(() => {
+          parts = parseInt(input.value());
+          redraw();
+        });
+      }
+
+      function draw() {
+        background(255);
+        noFill();
+        strokeWeight(2);
+
+        translate(100, 200);
+        circle(0, 0, 100);
+        let angle = TWO_PI / parts;
+        for (let i = 0; i < parts; i++) {
+          let x1 = 0;
+          let y1 = 0;
+          let x2 = cos(angle * i) * 100;
+          let y2 = sin(angle * i) * 100;
+          line(x1, y1, x2, y2);
+        }
+
+        translate(150, 0);
+        circle(0, 0, 100);
+        let x = 0;
+        let y = 100;
+        let m = -1 / parts;
+        for (let i = 0; i < parts; i++) {
+          let dx = cos(angle * i) * 100;
+          let dy = sin(angle * i) * 100;
+          let steps = max(abs(dx), abs(dy));
+          let xInc = dx / steps;
+          let yInc = dy / steps;
+          for (let j = 0; j < steps; j++) {
+            point(x, y);
+            x += xInc;
+            y += yInc;
+          }
+        }
+
+        translate(150, 0);
+        circle(0, 0, 100);
+        for (let i = 0; i < parts; i++) {
+          let x0 = 0;
+          let y0 = 100;
+          let x1 = cos(angle * i) * 100;
+          let y1 = sin(angle * i) * 100;
+          let dx = abs(x1 - x0);
+          let dy = -abs(y1 - y0);
+          let sx = x0 < x1 ? 1 : -1;
+          let sy = y0 < y1 ? 1 : -1;
+          let err = dx + dy;
+          while (x0 != x1 || y0 != y1) {
+            point(x0, y0);
+            let e2 = 2 * err;
+            if (e2 > dy) {
+              err += dy;
+              x0 += sx;
+            }
+            if (e2 < dx) {
+              err += dx;
+              y0 += sy;
+            }
+          }
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <div id="sketch-container"></div>
+  </body>
+</html>
