@@ -1,87 +1,155 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/addons/p5.dom.min.js"></script>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.min.js"
+        integrity="sha512-3RlxD1bW34eFKPwj9gUXEWtdSMC59QqIqHnD8O/NoTwSJhgxRizdcFVQhUMFyTp5RwLTDL0Lbcqtl8b7bFAzog=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <title>Document</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        canvas {
+            border: 2px solid black;
+        }
+
+        #controls {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
     <script>
-      let parts;
-      let canvas;
+        var numParts = 0;
+        var diameter = 80;
+        var centerX, centerY;
+        var radius;
 
-      function setup() {
-        canvas = createCanvas(500, 500);
-        canvas.parent("sketch-container");
-        createP("Numero de partes:");
-        let input = createInput();
-        input.parent("sketch-container");
-        input.changed(() => {
-          parts = parseInt(input.value());
-          redraw();
-        });
-      }
+        function setup() {
+            createCanvas(500, 500);
+            centerX = width / 2;
+            centerY = height / 2;
+            radius = diameter / 2;
 
-      function draw() {
-        background(255);
-        noFill();
-        strokeWeight(2);
+            var inputParts = createInput(numParts, 'number');
+            inputParts.position(863, 200);
+            inputParts.input(() => {
+                numParts = inputParts.value();
+                drawCircles();
+            });
 
-        translate(100, 200);
-        circle(0, 0, 100);
-        let angle = TWO_PI / parts;
-        for (let i = 0; i < parts; i++) {
-          let x1 = 0;
-          let y1 = 0;
-          let x2 = cos(angle * i) * 100;
-          let y2 = sin(angle * i) * 100;
-          line(x1, y1, x2, y2);
+            drawCircles();
         }
 
-        translate(150, 0);
-        circle(0, 0, 100);
-        let x = 0;
-        let y = 100;
-        let m = -1 / parts;
-        for (let i = 0; i < parts; i++) {
-          let dx = cos(angle * i) * 100;
-          let dy = sin(angle * i) * 100;
-          let steps = max(abs(dx), abs(dy));
-          let xInc = dx / steps;
-          let yInc = dy / steps;
-          for (let j = 0; j < steps; j++) {
-            point(x, y);
-            x += xInc;
-            y += yInc;
-          }
-        }
+        function drawCircles() {
+            background(220);
+            strokeWeight(2);
+            fill('blue');
 
-        translate(150, 0);
-        circle(0, 0, 100);
-        for (let i = 0; i < parts; i++) {
-          let x0 = 0;
-          let y0 = 100;
-          let x1 = cos(angle * i) * 100;
-          let y1 = sin(angle * i) * 100;
-          let dx = abs(x1 - x0);
-          let dy = -abs(y1 - y0);
-          let sx = x0 < x1 ? 1 : -1;
-          let sy = y0 < y1 ? 1 : -1;
-          let err = dx + dy;
-          while (x0 != x1 || y0 != y1) {
-            point(x0, y0);
-            let e2 = 2 * err;
-            if (e2 > dy) {
-              err += dy;
-              x0 += sx;
+            circle(centerX, centerY, diameter);
+            circle(centerX - 100, centerY, diameter);
+            circle(centerX + 100, centerY, diameter);
+
+            var angle = 0;
+            var angleStep = TWO_PI / numParts;
+
+            for (var i = 0; i < numParts; i++) {
+                var point1 = calculatePointOnCircle(angle);
+                var point2 = calculatePointOnCircle(angle + angleStep);
+
+                drawLinePendiente(centerX, centerY, point1.x, point1.y);
+                drawLineDDA(centerX - 100, centerY, point1.x - 100, point1.y);
+                drawLineBresenham(centerX + 100, centerY, point1.x + 100, point1.y);
+
+                angle += angleStep;
             }
-            if (e2 < dx) {
-              err += dx;
-              y0 += sy;
-            }
-          }
         }
-      }
+
+        function calculatePointOnCircle(angle) {
+            var x = centerX + radius * cos(angle);
+            var y = centerY + radius * sin(angle);
+            return { x, y };
+        }
+
+        function drawLinePendiente(x1, y1, x2, y2) {
+            if (x1 == x2) {
+                line(x1, y1, x2, y2);
+            } else {
+                var m = (y2 - y1) / (x2 - x1);
+                var b = y1 - m * x1;
+
+                var xMin = x1;
+                var xMax = x2;
+                var yMin = y1;
+                var yMax = y2;
+
+                var x1p = xMin;
+                var y1p = m * xMin + b;
+                var x2p = xMax;
+                var y2p = m * xMax + b;
+
+                stroke('green');
+                line(x1p, y1p, x2p, y2p);
+            }
+        }
+
+        function drawLineDDA(x1, y1, x2, y2) {
+            var dx = x2 - x1;
+            var dy = y2 - y1;
+
+            var steps = Math.max(Math.abs(dx), Math.abs(dy));
+
+            var xIncrement = dx / steps;
+            var yIncrement = dy / steps;
+
+            var x = x1;
+            var y = y1;
+
+            stroke('yellow');
+            for (let i = 0; i <= steps; i++) {
+                point(x, y);
+
+                x += xIncrement;
+                y += yIncrement;
+
+                line(x - xIncrement, y - yIncrement, x, y);
+            }
+        }
+
+        function drawLineBresenham(x, y, x1, y1) {
+            var dx = x1 - x;
+            var dy = y1 - y;
+            var steps;
+
+            if (abs(dx) > abs(dy))
+                steps = abs(dx);
+            else
+                steps = abs(dy);
+
+            var xs = dx / steps;
+            var ys = dy / steps;
+
+            stroke('red');
+            for (i = 0; i <= steps; i++) {
+                point(x, y);
+                x += xs;
+                y += ys;
+            }
+        }
     </script>
-  </head>
-  <body>
-    <div id="sketch-container"></div>
-  </body>
+</body>
+
 </html>
